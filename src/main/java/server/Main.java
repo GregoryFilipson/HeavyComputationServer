@@ -42,29 +42,3 @@ public class Main {
         }
     }
 }
-
-//    ServerSocket servSocket = new ServerSocket(44444);
-//        while (true) {
-//                try (Socket socket = servSocket.accept();
-//                PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-//                BufferedReader in = new BufferedReader(new
-//                InputStreamReader(socket.getInputStream()))) {
-//                String inputNumber;
-//                while ((inputNumber = in.readLine()) != null) {
-//                int number = Integer.parseInt(inputNumber);
-//                int first = 0;
-//                int second = 1;
-//                for (int i = 0; i < number; i++) {
-//        int result = second;
-//        second = first + second;
-//        first = result;
-//        }
-//        out.println("Result: " + first);
-//        if (inputNumber.equals("end")) {
-//        break;
-//        }
-//        }
-//        } catch (IOException ex) {
-//        ex.printStackTrace(System.out);
-//        }
-//        }
