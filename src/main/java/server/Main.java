@@ -1,7 +1,13 @@
 package server;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.InetSocketAddress;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.nio.ByteBuffer;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
@@ -9,19 +15,15 @@ import java.nio.charset.StandardCharsets;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-        final ServerSocketChannel serverChannel = ServerSocketChannel.open();
-        serverChannel.bind(new InetSocketAddress("localhost", 44444));
+        ServerSocket servSocket = new ServerSocket(44444);
         while (true) {
-            try (SocketChannel socketChannel = serverChannel.accept()) {
-                final ByteBuffer inputBuffer = ByteBuffer.allocate(2 << 10);
-                while (socketChannel.isConnected()) {
-                    int bytesCount = socketChannel.read(inputBuffer);
-                    if (bytesCount == -1) break;
-                    final String msg = new String(inputBuffer.array(), 0, bytesCount,
-                            StandardCharsets.UTF_8);
-                    inputBuffer.clear();
-                    System.out.println("Получено сообщение от клиента: " + msg);
-                    int number = Integer.parseInt(msg);
+            try (Socket socket = servSocket.accept();
+                 PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+                 BufferedReader in = new BufferedReader(new
+                         InputStreamReader(socket.getInputStream()))) {
+                String inputNumber;
+                while ((inputNumber = in.readLine()) != null) {
+                    int number = Integer.parseInt(inputNumber);
                     int first = 0;
                     int second = 1;
                     for (int i = 0; i < number; i++) {
@@ -29,12 +31,40 @@ public class Main {
                         second = first + second;
                         first = result;
                     }
-                    socketChannel.write(ByteBuffer.wrap(("Число Фибаначчи: " +
-                            first).getBytes(StandardCharsets.UTF_8)));
+                    out.println("Рузультат: " + first);
+                    if (inputNumber.equals("end")) {
+                        break;
+                    }
                 }
-            } catch (IOException err) {
-                System.out.println(err.getMessage());
+            } catch (IOException ex) {
+                ex.printStackTrace(System.out);
             }
         }
     }
 }
+
+//    ServerSocket servSocket = new ServerSocket(44444);
+//        while (true) {
+//                try (Socket socket = servSocket.accept();
+//                PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+//                BufferedReader in = new BufferedReader(new
+//                InputStreamReader(socket.getInputStream()))) {
+//                String inputNumber;
+//                while ((inputNumber = in.readLine()) != null) {
+//                int number = Integer.parseInt(inputNumber);
+//                int first = 0;
+//                int second = 1;
+//                for (int i = 0; i < number; i++) {
+//        int result = second;
+//        second = first + second;
+//        first = result;
+//        }
+//        out.println("Result: " + first);
+//        if (inputNumber.equals("end")) {
+//        break;
+//        }
+//        }
+//        } catch (IOException ex) {
+//        ex.printStackTrace(System.out);
+//        }
+//        }
