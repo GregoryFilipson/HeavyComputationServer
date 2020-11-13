@@ -2,16 +2,11 @@ package server;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.nio.ByteBuffer;
-import java.nio.channels.ServerSocketChannel;
-import java.nio.channels.SocketChannel;
-import java.nio.charset.StandardCharsets;
+
 
 public class Main {
     public static void main(String[] args) throws IOException {
@@ -23,11 +18,11 @@ public class Main {
                          InputStreamReader(socket.getInputStream()))) {
                 String inputNumber;
                 while ((inputNumber = in.readLine()) != null) {
-                    int number = Integer.parseInt(inputNumber);
-                    int first = 0;
-                    int second = 1;
+                    long number = Long.parseLong(inputNumber);
+                    long first = 0;
+                    long second = 1;
                     for (int i = 0; i < number; i++) {
-                        int result = second;
+                        long result = second;
                         second = first + second;
                         first = result;
                     }
